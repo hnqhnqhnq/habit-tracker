@@ -1,19 +1,14 @@
 const User = require("./../models/userModel");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
 
-exports.getCurrentUserProfile = async (req, res) => {
-  try {
-    const currentUser = req.user;
+exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
+  const currentUser = req.user;
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        user: currentUser,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "error",
-      message: err.message,
-    });
-  }
-};
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: currentUser,
+    },
+  });
+});

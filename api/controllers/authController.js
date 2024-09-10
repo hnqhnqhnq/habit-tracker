@@ -2,6 +2,8 @@ const { promisify } = require("util");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/userModel");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
 
 const signToken = (id) => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -33,86 +35,58 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-exports.protect = async (req, res, next) => {
-  try {
-    if (!req.cookies || !req.cookies.jwt) {
-      throw new Error("User not logged in!");
-    }
-
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET
-    );
-
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      throw new Error("No user!");
-    }
-
-    req.user = user;
-    next();
-  } catch (err) {
-    res.status(404).json({
-      status: "error",
-      data: {
-        message: err.message,
-      },
-    });
+exports.protect = catchAsync(async (req, res, next) => {
+  if (!req.cookies || !req.cookies.jwt) {
+    return next(new AppError("User is not logged in.\n", 401));
   }
-};
 
-exports.signup = async (req, res) => {
-  try {
-    const createdUser = await User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: req.body.password,
-      passwordConfirm: req.body.passwordConfirm,
-    });
+  const decoded = await promisify(jwt.verify)(
+    req.cookies.jwt,
+    process.env.JWT_SECRET
+  );
 
-    if (!createdUser) {
-      throw new Error("No user created!");
-    }
-
-    createSendToken(createdUser, 201, res);
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      data: {
-        err,
-      },
-    });
+  const user = await User.findById(decoded.id);
+  if (!user) {
+    return next(new AppError("User not found!", 404));
   }
-};
 
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  req.user = user;
+  next();
+});
 
-    if (!email || !password) {
-      throw new Error("Enter all credentials");
-    }
+exports.signup = catchAsync(async (req, res, next) => {
+  const createdUser = await User.create({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+  });
 
-    const user = await User.findOne({ email: email }).select("+password");
-
-    if (!user || !(await user.correctPassword(password, user.password))) {
-      throw new Error("Invalid email or password");
-    }
-
-    createSendToken(user, 201, res);
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      data: {
-        message: err.message,
-      },
-    });
+  if (!createdUser) {
+    return next(new AppError("User could not been created.\n", 400));
   }
-};
 
-exports.signout = async (req, res) => {
-  console.log("hit");
+  createSendToken(createdUser, 201, res);
+});
+
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new AppError("Enter all credentials.\n", 400));
+  }
+
+  const user = await User.findOne({ email: email }).select("+password");
+
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError("Invalid email or password.\n", 401));
+  }
+
+  createSendToken(user, 201, res);
+});
+
+exports.signout = catchAsync(async (req, res, next) => {
   res.cookie("jwt", "", {
     expires: new Date(0),
     httpOnly: true,
@@ -124,4 +98,4 @@ exports.signout = async (req, res) => {
     status: "success",
     message: "Logged out successfully!",
   });
-};
+});

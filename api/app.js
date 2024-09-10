@@ -7,6 +7,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
+const globalErrorHandler = require("./controllers/errorController");
+const AppError = require("./utils/appError");
 const userRouter = require("./routes/userRoutes");
 
 // Create express app
@@ -45,5 +47,10 @@ app.use(xss());
 
 // Routes
 app.use(`${process.env.API_ROUTE}/users`, userRouter);
+app.all("*", (req, res, next) => {
+  next(new AppError(`The endpoint ${req.originalUrl} does not exist!`, 404));
+});
 
+// Global Error Handler
+app.use(globalErrorHandler);
 module.exports = app;

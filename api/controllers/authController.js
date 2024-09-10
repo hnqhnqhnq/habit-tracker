@@ -33,10 +33,10 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-exports.protect = async (req, res) => {
+exports.protect = async (req, res, next) => {
   try {
     if (!req.cookies || !req.cookies.jwt) {
-      throw new Error("No login!");
+      throw new Error("User not logged in!");
     }
 
     const decoded = await promisify(jwt.verify)(
@@ -55,7 +55,7 @@ exports.protect = async (req, res) => {
     res.status(404).json({
       status: "error",
       data: {
-        err,
+        message: err.message,
       },
     });
   }
@@ -109,4 +109,19 @@ exports.login = async (req, res) => {
       },
     });
   }
+};
+
+exports.signout = async (req, res) => {
+  console.log("hit");
+  res.cookie("jwt", "", {
+    expires: new Date(0),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully!",
+  });
 };

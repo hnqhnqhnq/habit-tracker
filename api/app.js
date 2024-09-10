@@ -7,7 +7,9 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
+const userRouter = require("./routes/userRoutes");
 
+// Create express app
 const app = express();
 
 // Helmet
@@ -40,5 +42,8 @@ app.use(xss());
 
 // Parameter pollution
 //app.use(hpp({}))
+
+// Routes
+app.use(`${process.env.API_ROUTE}/users`, userRouter);
 
 module.exports = app;

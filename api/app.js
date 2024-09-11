@@ -16,7 +16,7 @@ const app = express();
 
 // CORS settings
 const corsOptions = {
-  origin: "exp://192.168.100.4:8081",
+  origin: ["http://192.168.100.4:8081", "http://localhost:8081"],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true,
 };

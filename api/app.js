@@ -14,6 +14,14 @@ const userRouter = require("./routes/userRoutes");
 // Create express app
 const app = express();
 
+// CORS settings
+const corsOptions = {
+  origin: "exp://192.168.100.4:8081",
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 // Helmet
 app.use(helmet());
 
@@ -53,4 +61,5 @@ app.all("*", (req, res, next) => {
 
 // Global Error Handler
 app.use(globalErrorHandler);
+
 module.exports = app;

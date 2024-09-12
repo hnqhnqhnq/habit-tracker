@@ -87,8 +87,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.signout = catchAsync(async (req, res, next) => {
-  res.cookie("jwt", "", {
-    expires: new Date(0),
+  res.clearCookie("jwt", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "None",

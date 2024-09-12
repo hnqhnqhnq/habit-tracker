@@ -1,6 +1,8 @@
 import { TextInput, View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
 
+
 export default function LoginScreen({ navigation }) {
+    const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
@@ -9,7 +11,7 @@ export default function LoginScreen({ navigation }) {
                     placeholderTextColor="#F0EAD6"
                     autoCorrect={false}
                     autoCapitalize="none"
-                    keyboardType="email-adress"
+                    keyboardType="email-address"
                     color="#E9DCC9">
                 </TextInput>
 
@@ -22,7 +24,6 @@ export default function LoginScreen({ navigation }) {
                     placeholderTextColor="#E9DCC9"
                     selectionColor="#E9DCC9"
                 >
-
                 </TextInput>
 
                 <TouchableOpacity style={styles.button}>

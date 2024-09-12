@@ -98,3 +98,10 @@ exports.signout = catchAsync(async (req, res, next) => {
     message: "Logged out successfully!",
   });
 });
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    isLoggedIn: true,
+  });
+});

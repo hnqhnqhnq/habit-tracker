@@ -1,8 +1,44 @@
+import { useState } from "react";
 import { TextInput, View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
 
 
 export default function LoginScreen({ navigation }) {
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
+    const PORT = process.env.EXPO_PUBLIC_API_PORT;
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    async function handleLogin() {
+        try {
+            const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                })
+            });
+
+            const data = await response.json();
+
+        } catch (error) {
+            console.log("error");
+        }
+
+        try {
+            const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/isloggedin`);
+            const data = await response.json();
+            if (data.isLoggedIn) {
+                navigation.navigate('Home');
+            } 
+        } catch {
+            console.log("error");
+        }
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
@@ -12,7 +48,11 @@ export default function LoginScreen({ navigation }) {
                     autoCorrect={false}
                     autoCapitalize="none"
                     keyboardType="email-address"
-                    color="#E9DCC9">
+                    color="#E9DCC9"
+                    value={email}
+                    onChangeText={(text) => {
+                        setEmail(text);
+                    }}>
                 </TextInput>
 
                 <TextInput style={styles.input}
@@ -23,10 +63,14 @@ export default function LoginScreen({ navigation }) {
                     textContentType="password"
                     placeholderTextColor="#E9DCC9"
                     selectionColor="#E9DCC9"
-                >
+                    value={password}
+                    onChangeText={(text) => {
+                        setPassword(text);
+                    }}>
                 </TextInput>
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button}
+                    onPress={handleLogin}>
                     <Text style={styles.buttonText}>Sign In</Text>
                 </TouchableOpacity>
 

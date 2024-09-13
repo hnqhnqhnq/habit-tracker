@@ -100,6 +100,7 @@ exports.signout = catchAsync(async (req, res, next) => {
 });
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
   res.status(200).json({
     status: "success",
     isLoggedIn: true,

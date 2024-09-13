@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const { habitSchema } = require("./habitModel");
 
 // User model
 const userSchema = mongoose.Schema({
@@ -41,6 +42,9 @@ const userSchema = mongoose.Schema({
   },
   passwordChangedAt: {
     type: Date,
+  },
+  habits: {
+    type: [habitSchema],
   },
   createdAt: {
     type: Date,

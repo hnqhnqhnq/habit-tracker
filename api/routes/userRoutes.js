@@ -17,4 +17,10 @@ router
   .route("/myProfile")
   .get(authController.protect, userController.getCurrentUserProfile);
 
+// Routes for user's habits
+router
+  .route("/:id/habits")
+  .get(authController.protect, userController.getUserHabits)
+  .post(authController.protect, userController.createHabit);
+
 module.exports = router;

@@ -1,15 +1,54 @@
+import { useState } from "react";
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 
 export default function SignupScreen() {
+
+    const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
+    const PORT = process.env.EXPO_PUBLIC_API_PORT;
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+
+    async function handleSignUp() {
+        try {
+            const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password,
+                    passwordConfirm: passwordConfirm
+                })
+            });
+            if (response.ok) {
+                const data = await response.JSON();
+            }
+        } catch {
+            console.log("error");
+        }
+    }
+
     return (
+
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
                 <TextInput style={styles.input}
                     placeholder="First Name"
                     placeholderTextColor="#F0EAD6"
                     autoCorrect={false}
-                    keyboardType="email-address"
-                    color="#E9DCC9">
+                    keyboardType="default"
+                    color="#E9DCC9"
+                    value={firstName}
+                    onChangeText={(text) => {
+                        setFirstName(text);
+                    }}>
                 </TextInput>
 
                 <TextInput style={styles.input}
@@ -17,7 +56,11 @@ export default function SignupScreen() {
                     placeholderTextColor="#F0EAD6"
                     autoCorrect={false}
                     keyboardType="email-address"
-                    color="#E9DCC9">
+                    color="#E9DCC9"
+                    value={lastName}
+                    onChangeText={(text) => {
+                        setLastName(text);
+                    }}>
                 </TextInput>
 
                 <TextInput style={styles.input}
@@ -26,7 +69,11 @@ export default function SignupScreen() {
                     autoCorrect={false}
                     autoCapitalize="none"
                     keyboardType="email-address"
-                    color="#E9DCC9">
+                    color="#E9DCC9"
+                    value={email}
+                    onChangeText={(text) => {
+                        setEmail(text);
+                    }}>
                 </TextInput>
 
                 <TextInput style={styles.input}
@@ -37,6 +84,10 @@ export default function SignupScreen() {
                     textContentType="password"
                     placeholderTextColor="#E9DCC9"
                     selectionColor="#E9DCC9"
+                    value={password}
+                    onChangeText={(text) => {
+                        setPassword(text);
+                    }}
                 ></TextInput>
 
                 <TextInput style={styles.input}
@@ -47,12 +98,15 @@ export default function SignupScreen() {
                     textContentType="password"
                     placeholderTextColor="#E9DCC9"
                     selectionColor="#E9DCC9"
+                    value={passwordConfirm}
+                    onChangeText={(text) => {
+                        setPasswordConfirm(text);
+                    }}
                 ></TextInput>
 
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={() => {
-                        
-                    }}>Sign Up</Text>
+                <TouchableOpacity style={styles.button}
+                    onPress={handleSignUp}>
+                    <Text style={styles.buttonText}>Sign Up</Text>
                 </TouchableOpacity>
 
             </View>

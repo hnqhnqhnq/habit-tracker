@@ -49,9 +49,6 @@ const userSchema = mongoose.Schema({
   createdAt: {
     type: Date,
   },
-  profilePicture: {
-    type: String,
-  },
   resetToken: {
     type: String,
     select: false,

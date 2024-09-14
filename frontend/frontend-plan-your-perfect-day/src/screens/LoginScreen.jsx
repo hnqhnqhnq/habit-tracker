@@ -23,6 +23,7 @@ export default function LoginScreen({ navigation }) {
             });
 
             const data = await response.json();
+            console.log(data);
 
         } catch (error) {
             console.log("error");
@@ -31,6 +32,7 @@ export default function LoginScreen({ navigation }) {
         try {
             const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/isloggedin`);
             const data = await response.json();
+
             if (data.isLoggedIn) {
                 navigation.navigate('Home');
             } 

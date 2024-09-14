@@ -9,6 +9,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["js", "json", "ts", "tsx", "jsx", "svg"]
+    },
     "ios": {
       "supportsTablet": true
     },

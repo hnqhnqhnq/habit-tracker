@@ -9,6 +9,8 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    let isStartScreen = false;
+
     async function handleLogin() {
         try {
             const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/login`, {
@@ -22,21 +24,18 @@ export default function LoginScreen({ navigation }) {
                 })
             });
 
-            const data = await response.json();
-            console.log(data);
+            if (response.ok) {
+                const data = await response.json();
+                let isLoggedInForFirstTime = data.data.user.habits.length == 0 ? true : false;
+                console.log(isLoggedInForFirstTime);
+
+                if (isLoggedInForFirstTime)
+                    navigation.navigate('Start');
+                else navigation.navigate('Home');
+
+            }
 
         } catch (error) {
-            console.log("error");
-        }
-
-        try {
-            const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/isloggedin`);
-            const data = await response.json();
-
-            if (data.isLoggedIn) {
-                navigation.navigate('Home');
-            } 
-        } catch {
             console.log("error");
         }
     }

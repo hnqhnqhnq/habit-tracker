@@ -5,6 +5,7 @@ export default function SignupScreen() {
 
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
+    const IP = process.env.EXPO_PUBLIC_IP;
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -14,7 +15,7 @@ export default function SignupScreen() {
 
     async function handleSignUp() {
         try {
-            const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/signup`, {
+            const response = await fetch(`${IP}:${PORT}${API_ROUTE}/users/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

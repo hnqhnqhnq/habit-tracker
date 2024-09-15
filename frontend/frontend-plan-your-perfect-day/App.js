@@ -16,11 +16,12 @@ export default function App() {
   const [loading, setLoading] = useState(true);  // Add loading state
   const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
   const PORT = process.env.EXPO_PUBLIC_API_PORT;
+  const IP = process.env.EXPO_PUBLIC_IP;
 
   useEffect(() => {
     async function checkAuthStatus() {
       try {
-        let response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/isLoggedin`, {
+        let response = await fetch(`${IP}:${PORT}${API_ROUTE}/users/isLoggedin`, {
           method: 'GET', 
           credentials: 'include',
         });

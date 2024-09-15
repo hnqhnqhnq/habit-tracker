@@ -46,6 +46,10 @@ const userSchema = mongoose.Schema({
   habits: {
     type: [habitSchema],
   },
+  dailyStreak: {
+    type: Number,
+    default: 0,
+  },
   createdAt: {
     type: Date,
   },

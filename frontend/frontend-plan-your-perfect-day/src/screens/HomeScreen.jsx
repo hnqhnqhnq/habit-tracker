@@ -7,10 +7,11 @@ import Footer from "../components/Footer";
 export default function HomeScreen({ navigation }) {
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
+    const IP = process.env.EXPO_PUBLIC_IP;
 
     async function handleSignOut() {
         try {
-            const response = await fetch(`http://192.168.100.193:${PORT}${API_ROUTE}/users/signout`);
+            const response = await fetch(`${IP}:${PORT}${API_ROUTE}/users/signout`);
             navigation.navigate('Login');
         } catch (err) {
             console.log(err);

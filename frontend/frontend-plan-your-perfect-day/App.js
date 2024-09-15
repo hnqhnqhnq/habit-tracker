@@ -7,6 +7,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import SignupScreen from "./src/screens/SignupScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import StartScreen from "./src/screens/StartScreen";
+import NewHabitScreen from "./src/screens/NewHabitScreen";
 
 const Stack = createStackNavigator();
 
@@ -50,6 +51,7 @@ export default function App() {
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Start" component={StartScreen} />
+        <Stack.Screen name='CreateNewHabit' component={NewHabitScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

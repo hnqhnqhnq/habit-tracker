@@ -1,8 +1,8 @@
-import { Button, View, StyleSheet, Text } from "react-native";
-import ArrowSvg from "../assets/ArrowSvg"
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { View, StyleSheet, Text } from "react-native";
 import ChartIcon from "../assets/ChartIcon";
 import { TouchableOpacity } from "react-native";
+
+import Footer from "../components/Footer";
 
 export default function HomeScreen({ navigation }) {
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
@@ -17,22 +17,28 @@ export default function HomeScreen({ navigation }) {
         }
     }
 
+    function handleCreateNew_ButtonPress() {
+        navigation.navigate('CreateNewHabit');
+    }
+
     return (
         <View style={styles.container}>
-            <View style = {styles.header}>
-                <View style={styles.textHeaderCurrentHabit}>
-                    <Text style={styles.textCurrentHabit}>Current Habits</Text>
+            {/* Header Section */}
+            <View style={styles.header}>
+                <View style={styles.headerLeft}>
+                    <Text style={styles.headerTitle}>Current Habits</Text>
                 </View>
-                <TouchableOpacity style={styles.textHeaderMyStats}>
-                    <Text style = {styles.textMyStats}>My Stats</Text>
-                    <ChartIcon style={{width: 12, height: 12}}/>
+                <TouchableOpacity style={styles.statsButton}>
+                    <Text style={styles.statsButtonText}>My Stats</Text>
+                    <ChartIcon style={styles.chartIcon} />
                 </TouchableOpacity>
             </View>
 
-            <Button title="Sign Out"
-                onPress={handleSignOut}>
-                Sign Out
-            </Button>
+            <View style={styles.content}>
+                {/* Additional content for your screen goes here */}
+            </View>
+
+            <Footer />
         </View>
     );
 }
@@ -40,43 +46,66 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000', 
-    }, 
+        backgroundColor: '#000',
+    },
 
     header: {
-        flex: 1,
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        top: 90,
-        gap: 50
-    }, 
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        marginTop: 80,
+        width: '90%',
+    },
 
-    textCurrentHabit: {
+    headerTitle: {
         color: '#E9DCC9',
-        fontSize: 28,
+        fontSize: 30,
     },
 
-    textMyStats: {
-        color: '#000',
-        fontSize: 12
-    },
-
-    textHeaderCurrentHabit: {
-        
-    },
-
-    textHeaderMyStats: {
-        flexDirection: "row",
-        gap: 5,
-        backgroundColor: "#E9DCC9",
+    statsButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#E9DCC9', 
         borderRadius: 10,
-        height: 28, 
-        width: 100, 
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        left: 30,
+    },
+
+    statsButtonText: {
+        color: '#000',
+        fontSize: 12,
+        marginRight: 5, 
+    },
+
+    chartIcon: {
+        width: 12,
+        height: 12,
+    },
+
+    content: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        top: 3
+    },
+
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center', 
+        paddingBottom: 30,
+        width: '100%',
+        left: 1.5
+    },
+
+    footerItem: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    footerText: {
+        color: '#E9DCC9', 
+        fontSize: 16,
+        marginTop: 8, 
     },
 });

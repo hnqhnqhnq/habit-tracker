@@ -39,7 +39,7 @@ export default function HomeScreen({ navigation }) {
                 {/* Additional content for your screen goes here */}
             </View>
 
-            <Footer />
+            {/* <Footer /> */}
         </View>
     );
 }

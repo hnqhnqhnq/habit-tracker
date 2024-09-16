@@ -13,7 +13,7 @@ export default function StartScreen({ navigation }) {
                 <Text style={styles.textSubtitle}>Track your progress and keep going</Text>
             </View>
             <View style={styles.buttonContainer}>
-                <MyButton text="Get Started!" onPress={() => {navigation.navigate('Home')}}/>
+                <MyButton text="Get Started!" onPress={() => {navigation.navigate('App')}}/>
             </View>
         </View>
     );

@@ -39,9 +39,14 @@ export default function NewHabitScreen() {
         selectedDays.filter((selectedDay) => selectedDay !== day)
       );
     } else {
-      setSelectedDays([...selectedDays, day]);
+      if (day === "All Days") {
+        setSelectedDays(["All Days"]);
+      } else if (selectedDays.length === 1 && selectedDays[0] === "All Days") {
+        setSelectedDays([day]);
+      } else {
+        setSelectedDays([...selectedDays, day]);
+      }
     }
-    console.log(selectedDays);
   };
 
   const renderDayItem = ({ item }) => {

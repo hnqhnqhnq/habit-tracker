@@ -54,8 +54,9 @@ exports.createHabit = catchAsync(async (req, res, next) => {
 
   const newHabit = await Habit.create({
     name: req.body.name,
-    description: req.body.description,
-    dailyTargetValue: req.body.dailyTargetValue,
+    description: req.body.description || "",
+    days: req.body.days,
+    color: req.body.color,
   });
 
   if (!newHabit) {

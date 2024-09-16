@@ -1,19 +1,93 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { StyleSheet, ActivityIndicator, View } from "react-native";
+import { Text } from 'react-native';
+// for navigation purposes 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// screens for auth 
 import LoginScreen from "./src/screens/LoginScreen";
 import SignupScreen from "./src/screens/SignupScreen";
-import HomeScreen from "./src/screens/HomeScreen";
 import StartScreen from "./src/screens/StartScreen";
+
+// screens for main app
+import AppScreen from "./src/screens/AppScreen";
+import HabitsScreen from "./src/screens/HabitsScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 import NewHabitScreen from "./src/screens/NewHabitScreen";
 
+import Foundation from 'react-native-vector-icons/Foundation';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Feather from 'react-native-vector-icons/Feather'
+
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function AuthStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="Start" component={StartScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function AppTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false, // Hide the header
+        tabBarStyle: stylesTabNav.tabBar,  // Apply custom styles for the tab bar
+        tabBarShowLabel: true,      // Show labels for each tab
+        tabBarActiveTintColor: '#E9DCC9', // Active icon/text color
+        tabBarInactiveTintColor: '#8e8e93', // Inactive icon/text color
+      }}
+    >
+      <Tab.Screen 
+        name="Today" 
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Foundation name="home" color={color} size={25} />
+          ),
+          tabBarLabel: ({ color }) => (
+            <Text style={[stylesTabNav.tabLabel, { color }]} >Today</Text>
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="Add" 
+        component={NewHabitScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add-circle-outline" color={color} size={40} />
+          ),
+          tabBarLabel: ({ color }) => (
+            <Text style={[stylesTabNav.tabLabel, { color }]} >Create New</Text>
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="Habits" 
+        component={HabitsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="book" color={color} size={25} />
+          ),
+          tabBarLabel: ({ color }) => (
+            <Text style={[stylesTabNav.tabLabel, { color }]} >Habits</Text>
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);  // Add loading state
+  const [loading, setLoading] = useState(true);  
   const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
   const PORT = process.env.EXPO_PUBLIC_API_PORT;
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -30,29 +104,28 @@ export default function App() {
       } catch (err) {
         console.log(err);
       } finally {
-        setLoading(false);  // End loading after the check
+        setLoading(false); 
       }
     }
     checkAuthStatus();
   }, []);
 
   if (loading) {
-    // Show a loading indicator while checking login status
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#fff" />
       </View>
     );
   }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={isLoggedIn ? 'Home' : 'Login'} screenOptions={{ headerShown: false}}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Start" component={StartScreen} />
-        <Stack.Screen name='CreateNewHabit' component={NewHabitScreen}/>
+      <Stack.Navigator screenOptions={{ headerShown: false}}>
+        {isLoggedIn ? (
+          <Stack.Screen name="App" component={AppTabs} />
+        ) : (
+          <Stack.Screen name="Auth" component={AuthStack} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -65,3 +138,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+const stylesTabNav = StyleSheet.create({
+  tabBar: {
+    backgroundColor: 'black', // Make the background transparent
+    borderTopWidth: 0,              // Remove the white line (border) at the top of the tab bar
+    paddingBottom: 20,              // Padding to adjust the icons and text
+    paddingTop: 5,
+    height: 90,                     // Increase height for larger icons
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabLabel: {
+    fontSize: 16,
+    marginTop: 8,
+  },
+});
+

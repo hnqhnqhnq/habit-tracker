@@ -5,6 +5,7 @@ const { Habit } = require("./../models/habitModel");
 
 exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
   const currentUser = req.user;
+  currentUser.updateDailyStreak(false);
 
   res.status(200).json({
     status: "success",
@@ -114,6 +115,12 @@ exports.updateHabit = catchAsync(async (req, res, next) => {
     habit.color = req.body.color;
   }
 
+  if (req.body.checked !== undefined) {
+    habit.checked = req.body.checked;
+    habit.lastChecked = Date.now();
+    user.updateDailyStreak();
+  }
+
   await habit.save();
 
   const habitIndex = user.habits.findIndex((habitEl) => {
@@ -178,6 +185,8 @@ exports.getCurrentHabits = catchAsync(async (req, res, next) => {
   if (!habits) {
     return next(new AppError("You don't have activities for today.\n", 404));
   }
+
+  await user.resetCheckedHabits();
 
   res.status(200).json({
     status: "success",

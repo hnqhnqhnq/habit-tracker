@@ -12,6 +12,10 @@ const habitSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  lastChecked: {
+    type: Date,
+    default: null,
+  },
   days: {
     type: [String],
     enum: [

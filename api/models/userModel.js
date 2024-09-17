@@ -51,6 +51,10 @@ const userSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  lastStreakUpdate: {
+    type: Date,
+    default: null,
+  },
   createdAt: {
     type: Date,
   },
@@ -153,6 +157,53 @@ userSchema.methods.getHabitsForToday = function () {
   });
 
   return habits;
+};
+
+// Reset checking state each day
+userSchema.methods.resetCheckedHabits = async function () {
+  const currentDate = moment().startOf("day");
+
+  this.habits.forEach((habit) => {
+    if (habit.lastChecked) {
+      const lastCheckedDate = moment(habit.lastChecked).startOf("day");
+
+      if (currentDate.isAfter(lastCheckedDate)) {
+        habit.checked = false;
+      }
+    }
+  });
+
+  await this.save();
+};
+
+// Update user daily streak with increment or not
+userSchema.methods.updateDailyStreak = async function (increment = true) {
+  const today = moment().startOf("day");
+  const lastStreakDate = this.lastStreakUpdate
+    ? moment(this.lastStreakUpdate).startOf("day")
+    : null;
+
+  if (lastStreakDate) {
+    const daysDifference = today.diff(lastStreakDate, "days");
+
+    if (daysDifference === 0) {
+      return;
+    } else if (daysDifference === 1) {
+      if (increment) {
+        this.dailyStreak += 1;
+      }
+    } else {
+      this.dailyStreak = 0;
+    }
+  } else {
+    if (increment) {
+      this.dailyStreak = 1;
+    }
+  }
+
+  this.lastStreakUpdate = today.toDate();
+
+  await this.save();
 };
 
 const User = mongoose.model("User", userSchema);

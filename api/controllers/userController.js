@@ -2,6 +2,7 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const { Habit } = require("./../models/habitModel");
+const habitsUsingQuery = require("./../utils/habitsUsingQuery");
 
 exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
   const currentUser = req.user;
@@ -16,6 +17,7 @@ exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
 
 exports.getUserHabits = catchAsync(async (req, res, next) => {
   const userId = req.params.id;
+  let habits;
 
   if (!userId) {
     return next(new AppError("User ID must be provided.\n", 400));
@@ -27,8 +29,11 @@ exports.getUserHabits = catchAsync(async (req, res, next) => {
     return next(new AppError("User could not be found.\n", 404));
   }
 
-  const habits = user.habits || [];
-  console.log(habits);
+  if (Object.keys(req.query).length === 0) {
+    habits = user.habits || [];
+  } else {
+    habits = habitsUsingQuery(user, req.query);
+  }
 
   res.status(200).json({
     status: "success",

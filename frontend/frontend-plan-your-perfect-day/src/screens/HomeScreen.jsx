@@ -2,11 +2,35 @@ import { View, StyleSheet, Text } from "react-native";
 import ChartIcon from "../assets/ChartIcon";
 import { TouchableOpacity } from "react-native";
 import Header from "../components/Header";
+import HabitList from "../components/HabitList";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function HomeScreen({ navigation }) {
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
     const IP = process.env.EXPO_PUBLIC_IP;
+
+    const [userId, setUserId] = useState("");
+
+    const urlProfile = `${IP}:${PORT}${API_ROUTE}/users/myProfile`;
+    const urlHabits = `${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`;
+
+    useEffect(() => {
+        async function fetchUserData() {
+            try {
+                const response = await fetch(`${urlProfile}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserId(data.data.user._id);
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchUserData();
+    }, []);
 
     async function handleSignOut() {
         try {
@@ -23,7 +47,7 @@ export default function HomeScreen({ navigation }) {
             <Header headerTitle=" Current Habits "/>
 
             <View style={styles.content}>
-                {/* Additional content for home screen goes here */}
+                <HabitList checkable={true} urlHabits={urlHabits} userId={userId}/>
             </View>
         </View>
     );
@@ -73,6 +97,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 30
     },
 
     footer: {

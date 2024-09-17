@@ -17,6 +17,7 @@ exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
 
 exports.getUserHabits = catchAsync(async (req, res, next) => {
   const userId = req.params.id;
+  console.log(req.query);
   let habits;
 
   if (!userId) {

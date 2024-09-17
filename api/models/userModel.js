@@ -129,9 +129,17 @@ userSchema.methods.createResetToken = function () {
 
 // Get habits based on a filtering using week days
 userSchema.methods.getAllHabitsForAWeekDay = function (query) {
-  const day = Object.keys(query)[0];
+  const days = Object.keys(query);
   const habits = this.habits.filter((habit) => {
-    return habit.days.includes(day) || habit.days.includes("All Days");
+    let ok = false;
+
+    for (const day of days) {
+      if (habit.days.includes(day) || habit.days.includes("All Days")) {
+        ok = true;
+      }
+    }
+
+    return ok;
   });
 
   return habits;

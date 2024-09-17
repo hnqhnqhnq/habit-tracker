@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TouchableOpacity } from 'react-native';
 
-const HabitList = ({checkable = false, urlHabits = '', userId = ''}) => {
+const HabitList = ({ checkable = false, urlHabits = '', userId = '', days = [] }) => {
 
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
@@ -16,12 +16,29 @@ const HabitList = ({checkable = false, urlHabits = '', userId = ''}) => {
 
     const [habitsData, setHabitsData] = useState(null);
 
+    function buildHabitsUrl() {
+        let parsableString = '?';
+        days.forEach((day, index) => {
+            let curr = `${day}=true`;
+            if (index < days.length - 1) {
+                curr += "&";
+            }
+            parsableString += curr;
+        });
+
+        // Instead of modifying `urlHabits`, return the new URL
+        return urlHabits + parsableString;
+    }
+
+
     useFocusEffect(
         useCallback(() => {
             if (userId) {
                 async function fetchAllHabits() {
                     try {
-                        const response = await fetch(`${urlHabits}`);
+                        const finalUrl = buildHabitsUrl();
+                        console.log(finalUrl)
+                        const response = await fetch(`${finalUrl}`);
                         if (response.ok) {
                             const data = await response.json();
                             setHabitsData(data);
@@ -31,11 +48,12 @@ const HabitList = ({checkable = false, urlHabits = '', userId = ''}) => {
                     }
                 }
 
+                buildHabitsUrl();
                 fetchAllHabits();
             }
-        }, [userId])
+        }, [userId, days])
     );
-    
+
     return (
         <>
             {habitsData && (
@@ -43,7 +61,7 @@ const HabitList = ({checkable = false, urlHabits = '', userId = ''}) => {
                     {
                         habitsData.data.habits.map(habit => (
                             <View key={habit._id} style={styles.habitAndCheckContainer}>
-                                <TouchableOpacity style={[styles.containerPerHabit, { backgroundColor: 'black', borderColor: habit.color, borderWidth: 2 }]}>
+                                <TouchableOpacity style={[styles.containerPerHabit, { backgroundColor: 'black', borderColor: habit.color, borderWidth: 2, }]}>
 
                                     <Text style={{
                                         color: habit.color,
@@ -57,15 +75,15 @@ const HabitList = ({checkable = false, urlHabits = '', userId = ''}) => {
                                         {habit.description}
                                     </Text>
                                 </TouchableOpacity>
-                                { checkable === true ? (
+                                {checkable === true ? (
                                     <TouchableOpacity style={styles.checked}>
-                                    </TouchableOpacity> ) : <></> 
-                                }       
+                                    </TouchableOpacity>) : <></>
+                                }
                             </View>
                         ))
                     }
                 </ScrollView>
-            )} 
+            )}
         </>
     );
 }

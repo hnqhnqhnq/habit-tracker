@@ -12,9 +12,10 @@ export default function HomeScreen({ navigation }) {
     const IP = process.env.EXPO_PUBLIC_IP;
 
     const [userId, setUserId] = useState("");
+    const [urlHabits, setUrlHabits] = useState('');
 
     const urlProfile = `${IP}:${PORT}${API_ROUTE}/users/myProfile`;
-    const urlHabits = `${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`;
+    // const urlHabits = `${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`;
 
     useEffect(() => {
         async function fetchUserData() {
@@ -23,6 +24,7 @@ export default function HomeScreen({ navigation }) {
                 if (response.ok) {
                     const data = await response.json();
                     setUserId(data.data.user._id);
+                    setUrlHabits(`${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`);
                 }
 
             } catch (error) {

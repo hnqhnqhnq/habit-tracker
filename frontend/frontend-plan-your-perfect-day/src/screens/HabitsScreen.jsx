@@ -52,7 +52,7 @@ const HabitsScreen = () => {
 
             <WeekDaysFlatList days={days} setSelectedDays={setDays} daysOfWeek={daysOfWeek} />
 
-            <HabitList checkable={false} urlHabits={urlHabits} userId={userId} />
+            <HabitList checkable={false} urlHabits={urlHabits} userId={userId} days={days}/>
         </View>
     )
 }

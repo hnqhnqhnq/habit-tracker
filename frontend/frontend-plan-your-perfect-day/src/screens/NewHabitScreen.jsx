@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native";
+import WeekDaysFlatList from "../components/WeekDaysFlatList";
 
 import MyButton from "../components/MyButton";
 
@@ -93,37 +94,6 @@ export default function NewHabitScreen({ navigation }) {
         setSelectedColor(color);
     };
 
-    const toggleDay = (day) => {
-        if (days.includes(day)) {
-            setSelectedDays(
-                days.filter((selectedDay) => selectedDay !== day)
-            );
-        } else {
-            if (day === "All Days") {
-                setSelectedDays(["All Days"]);
-            } else if (days.length === 1 && days[0] === "All Days") {
-                setSelectedDays([day]);
-            } else {
-                setSelectedDays([...days, day]);
-            }
-        }
-    };
-
-    const renderDayItem = ({ item }) => {
-        const isSelected = days.includes(item);
-        return (
-            <TouchableOpacity
-                style={[
-                    styles.dayItem,
-                    isSelected ? styles.daySelected : styles.dayUnselected,
-                ]}
-                onPress={() => toggleDay(item)}
-            >
-                <Text style={styles.dayText}>{item}</Text>
-            </TouchableOpacity>
-        );
-    };
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <SafeAreaView style={styles.container}>
@@ -157,19 +127,7 @@ export default function NewHabitScreen({ navigation }) {
 
                 <Text style={styles.reminderText}>• Select day(s) for this habit</Text>
 
-                {/* Horizontal FlatList for days of the week */}
-                <View style={styles.flatListWrapper}>
-                    <FlatList
-                        data={daysOfWeek}
-                        renderItem={renderDayItem}
-                        keyExtractor={(item) => item}
-                        horizontal={true}
-                        contentContainerStyle={styles.daysList}
-                        showsHorizontalScrollIndicator={false}
-                        value={days}
-                        
-                    />
-                </View>
+                <WeekDaysFlatList days={days} setSelectedDays={setSelectedDays} daysOfWeek={daysOfWeek}/>
 
                 <Text style={styles.reminderText}>• Select label color</Text>
 
@@ -191,7 +149,6 @@ export default function NewHabitScreen({ navigation }) {
                         ></TouchableOpacity>
                     ))}
                 </View>
-
 
                 <MyButton text='Create New Habit' onPress={handleCreateHabitButtonClick}></MyButton>
             </SafeAreaView>
@@ -236,7 +193,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         color: "#E9DCC9",
         textAlignVertical: "top",
-        marginBottom: 30,
     },
     reminderText: {
         color: "#E9DCC9",
@@ -244,35 +200,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
         marginLeft: 10,
         marginBottom: 5,
-    },
-    flatListWrapper: {
-        width: "100%",
-        marginBottom: 30,
-    },
-    daysList: {
-        paddingHorizontal: 10,
-        justifyContent: "center",
-    },
-    dayItem: {
-        marginHorizontal: 5,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 15,
-        borderWidth: 2,
-        borderColor: "#E9DCC9",
-        alignItems: "center",
-    },
-    dayUnselected: {
-        backgroundColor: "black",
-    },
-    daySelected: {
-        backgroundColor: "grey",
-    },
-    dayText: {
-        color: "#E9DCC9",
-        fontSize: 16,
-        width: 90,
-        textAlign: "center",
+        marginTop: 30
     },
 
     colorsContainer: {
@@ -282,9 +210,8 @@ const styles = StyleSheet.create({
         width: "100%", 
         paddingLeft: 10, 
         gap: 20, 
-        marginBottom: 60, 
+        marginBottom: 30, 
     },
-
 
     selectedColorCircle: {
         borderWidth: 2,

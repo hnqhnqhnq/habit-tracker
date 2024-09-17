@@ -1,6 +1,7 @@
 import { View, StyleSheet, Text } from "react-native";
 import ChartIcon from "../assets/ChartIcon";
 import { TouchableOpacity } from "react-native";
+import Header from "../components/Header";
 
 export default function HomeScreen({ navigation }) {
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
@@ -19,18 +20,10 @@ export default function HomeScreen({ navigation }) {
     return (
         <View style={styles.container}>
             {/* Header Section */}
-            <View style={styles.header}>
-                <View style={styles.headerLeft}>
-                    <Text style={styles.headerTitle}>Current Habits</Text>
-                </View>
-                <TouchableOpacity style={styles.statsButton}>
-                    <Text style={styles.statsButtonText}>My Stats</Text>
-                    <ChartIcon style={styles.chartIcon} />
-                </TouchableOpacity>
-            </View>
+            <Header headerTitle=" Current Habits "/>
 
             <View style={styles.content}>
-                {/* Additional content for your screen goes here */}
+                {/* Additional content for home screen goes here */}
             </View>
         </View>
     );

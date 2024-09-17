@@ -22,7 +22,7 @@ const Header = ({ headerTitle = "Default Header"}) => {
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
         alignItems: 'center',
         marginTop: 80,
         width: '90%',
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     headerTitle: {
         color: '#E9DCC9',
         fontSize: 30,
+        left: 20
     },
 
     statsButton: {
@@ -41,6 +42,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         left: 30,
+        marginRight: 10
     },
 
     statsButtonText: {

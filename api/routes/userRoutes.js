@@ -28,4 +28,8 @@ router
   .patch(authController.protect, userController.updateHabit)
   .delete(authController.protect, userController.deleteHabit);
 
+router
+  .route("/:id/todaysHabits")
+  .get(authController.protect, userController.getCurrentHabits);
+
 module.exports = router;

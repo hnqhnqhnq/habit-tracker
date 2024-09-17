@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const moment = require("moment");
 const { habitSchema } = require("./habitModel");
 
 // User model
@@ -124,6 +125,26 @@ userSchema.methods.createResetToken = function () {
   this.resetTokenExpirationDate = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+};
+
+// Get habits based on a filtering using week days
+userSchema.methods.getAllHabitsForAWeekDay = function (query) {
+  const day = Object.keys(query)[0];
+  const habits = this.habits.filter((habit) => {
+    return habit.days.includes(day) || habit.days.includes("All Days");
+  });
+
+  return habits;
+};
+
+// Get current week day's habits
+userSchema.methods.getHabitsForToday = function () {
+  const today = moment().format("dddd");
+  const habits = this.habits.filter((habit) => {
+    return habit.days.includes(today) || habit.days.includes("All Days");
+  });
+
+  return habits;
 };
 
 const User = mongoose.model("User", userSchema);

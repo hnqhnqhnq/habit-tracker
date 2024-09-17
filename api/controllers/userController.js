@@ -2,7 +2,6 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const { Habit } = require("./../models/habitModel");
-const habitsUsingQuery = require("./../utils/habitsUsingQuery");
 
 exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
   const currentUser = req.user;
@@ -32,7 +31,7 @@ exports.getUserHabits = catchAsync(async (req, res, next) => {
   if (Object.keys(req.query).length === 0) {
     habits = user.habits || [];
   } else {
-    habits = habitsUsingQuery(user, req.query);
+    habits = user.getAllHabitsForAWeekDay(req.query);
   }
 
   res.status(200).json({
@@ -158,5 +157,33 @@ exports.deleteHabit = catchAsync(async (req, res, next) => {
 
   res.status(204).json({
     status: "success",
+  });
+});
+
+exports.getCurrentHabits = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+
+  if (!userId) {
+    return next(new AppError("User ID must be provided.\n", 400));
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return next(new AppError("User could not be found.\n", 404));
+  }
+
+  const habits = user.getHabitsForToday();
+
+  if (!habits) {
+    return next(new AppError("You don't have activities for today.\n", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    length: habits.length,
+    data: {
+      habits,
+    },
   });
 });

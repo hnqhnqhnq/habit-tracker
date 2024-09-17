@@ -121,7 +121,7 @@ userSchema.methods.createResetToken = function () {
     console.log({ resetToken }, this.passwordResetToken);
   }
 
-  this.resetTokenExpirationDate = new Date() + 10 * 60 * 1000;
+  this.resetTokenExpirationDate = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
 };

@@ -23,4 +23,9 @@ router
   .get(authController.protect, userController.getUserHabits)
   .post(authController.protect, userController.createHabit);
 
+router
+  .route("/:userId/habits/:habitId")
+  .patch(authController.protect, userController.updateHabit)
+  .delete(authController.protect, userController.deleteHabit);
+
 module.exports = router;

@@ -17,7 +17,6 @@ exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
 
 exports.getUserHabits = catchAsync(async (req, res, next) => {
   const userId = req.params.id;
-  console.log(req.query);
   let habits;
 
   if (!userId) {
@@ -58,6 +57,10 @@ exports.createHabit = catchAsync(async (req, res, next) => {
     return next(new AppError("User could not be found.\n", 404));
   }
 
+  if (req.body.days.length === 0) {
+    return next(new AppError("The habit must take place.\n", 400));
+  }
+
   const newHabit = await Habit.create({
     name: req.body.name,
     description: req.body.description || "",
@@ -77,5 +80,83 @@ exports.createHabit = catchAsync(async (req, res, next) => {
     data: {
       newHabit,
     },
+  });
+});
+
+exports.updateHabit = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.params.userId);
+
+  if (!user) {
+    return next(new AppError("User not found.\n", 404));
+  }
+
+  const habit = await Habit.findById(req.params.habitId);
+
+  if (!habit) {
+    return next(new AppError("Habit not found.\n", 404));
+  }
+
+  if (req.body.name) {
+    habit.name = req.body.name;
+  }
+
+  if (req.body.description) {
+    habit.description = req.body.description;
+  }
+
+  if (req.body.days) {
+    if (req.body.days.length === 0) {
+      return next(new AppError("The habit must take place.\n", 400));
+    }
+    habit.days = [...req.body.days];
+  }
+
+  if (req.body.color) {
+    habit.color = req.body.color;
+  }
+
+  await habit.save();
+
+  const habitIndex = user.habits.findIndex((habitEl) => {
+    return habitEl._id.equals(req.params.habitId);
+  });
+
+  if (habitIndex != -1) {
+    user.habits[habitIndex] = habit;
+  }
+
+  await user.save();
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      habit,
+    },
+  });
+});
+
+exports.deleteHabit = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.params.userId);
+
+  if (!user) {
+    return next(new AppError("User not found.\n", 404));
+  }
+
+  const habit = await Habit.findById(req.params.habitId);
+
+  if (!habit) {
+    return next(new AppError("Habit not found.\n", 404));
+  }
+
+  user.habits = user.habits.filter((habitEl) => {
+    return !habitEl._id.equals(req.params.habitId);
+  });
+
+  await user.save();
+
+  await Habit.deleteOne({ _id: req.params.habitId });
+
+  res.status(204).json({
+    status: "success",
   });
 });

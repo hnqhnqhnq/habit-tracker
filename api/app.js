@@ -20,6 +20,7 @@ const corsOptions = {
     "http://192.168.100.4:8081",
     "http://192.168.100.67:8081",
     "http://localhost:8081",
+    "http://192.168.100.193:8081", 
   ],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true,

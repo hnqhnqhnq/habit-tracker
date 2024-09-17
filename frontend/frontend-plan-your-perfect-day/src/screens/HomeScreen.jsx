@@ -2,8 +2,6 @@ import { View, StyleSheet, Text } from "react-native";
 import ChartIcon from "../assets/ChartIcon";
 import { TouchableOpacity } from "react-native";
 
-import Footer from "../components/Footer";
-
 export default function HomeScreen({ navigation }) {
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
@@ -16,10 +14,6 @@ export default function HomeScreen({ navigation }) {
         } catch (err) {
             console.log(err);
         }
-    }
-
-    function handleCreateNew_ButtonPress() {
-        navigation.navigate('CreateNewHabit');
     }
 
     return (
@@ -38,8 +32,6 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.content}>
                 {/* Additional content for your screen goes here */}
             </View>
-
-            {/* <Footer /> */}
         </View>
     );
 }

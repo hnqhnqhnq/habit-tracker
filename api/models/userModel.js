@@ -4,6 +4,8 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const { habitSchema } = require("./habitModel");
+const Stat = require("./statModel");
+const AppError = require("./../utils/appError");
 
 // User model
 const userSchema = mongoose.Schema({
@@ -52,6 +54,10 @@ const userSchema = mongoose.Schema({
     default: 0,
   },
   lastStreakUpdate: {
+    type: Date,
+    default: null,
+  },
+  statCreatedAt: {
     type: Date,
     default: null,
   },
@@ -183,11 +189,8 @@ userSchema.methods.updateDailyStreak = async function (increment = true) {
     ? moment(this.lastStreakUpdate).startOf("day")
     : null;
 
-  console.log(today, lastStreakDate);
-
   if (lastStreakDate) {
     const daysDifference = today.diff(lastStreakDate, "days");
-    console.log(daysDifference);
     if (daysDifference === 0) {
       return;
     } else if (daysDifference === 1) {
@@ -207,6 +210,27 @@ userSchema.methods.updateDailyStreak = async function (increment = true) {
   }
 
   await this.save();
+};
+
+// Get checked habits
+userSchema.methods.getCheckedHabits = function () {
+  const habits = this.getHabitsForToday();
+  const checkedHabits = habits.filter((habitEl) => {
+    return habitEl.checked;
+  });
+
+  return checkedHabits;
+};
+
+// Get stats
+userSchema.methods.getStats = async function (req, next) {
+  const stats = await Stat.find({ user: req.user._id }).sort("-statDate");
+
+  if (!stats) {
+    return next(new AppError("Stats not found!\n", 404));
+  }
+
+  return stats;
 };
 
 const User = mongoose.model("User", userSchema);

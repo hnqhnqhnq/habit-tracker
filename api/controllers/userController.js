@@ -74,6 +74,15 @@ exports.createHabit = catchAsync(async (req, res, next) => {
 
   user.habits.push(newHabit);
   await user.save();
+  const stats = await user.getStats(req, next);
+
+  const habitsForToday = user.getHabitsForToday() || [];
+  const checkedHabits = user.getCheckedHabits() || [];
+
+  await stats[0].updateStat({
+    habitsForTodayLength: habitsForToday.length,
+    checkedHabitsForTodayLength: checkedHabits.length,
+  });
 
   res.status(201).json({
     status: "success",
@@ -85,53 +94,55 @@ exports.createHabit = catchAsync(async (req, res, next) => {
 
 exports.updateHabit = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.userId);
-
   if (!user) {
     return next(new AppError("User not found.\n", 404));
   }
 
   const habit = await Habit.findById(req.params.habitId);
-
   if (!habit) {
     return next(new AppError("Habit not found.\n", 404));
   }
 
-  if (req.body.name) {
-    habit.name = req.body.name;
-  }
-
-  if (req.body.description) {
-    habit.description = req.body.description;
-  }
-
+  if (req.body.name) habit.name = req.body.name;
+  if (req.body.description) habit.description = req.body.description;
   if (req.body.days) {
     if (req.body.days.length === 0) {
       return next(new AppError("The habit must take place.\n", 400));
     }
     habit.days = [...req.body.days];
   }
-
-  if (req.body.color) {
-    habit.color = req.body.color;
-  }
-
+  if (req.body.color) habit.color = req.body.color;
   if (req.body.checked !== undefined) {
     habit.checked = req.body.checked;
-    habit.lastChecked = Date.now();
-    await user.updateDailyStreak();
+    if (req.body.checked) {
+      habit.lastChecked = Date.now();
+      await user.updateDailyStreak();
+    }
   }
 
   await habit.save();
 
-  const habitIndex = user.habits.findIndex((habitEl) => {
-    return habitEl._id.equals(req.params.habitId);
-  });
-
-  if (habitIndex != -1) {
+  const habitIndex = user.habits.findIndex((h) =>
+    h._id.equals(req.params.habitId)
+  );
+  if (habitIndex !== -1) {
     user.habits[habitIndex] = habit;
   }
 
   await user.save();
+
+  const habitsForToday = user.getHabitsForToday() || [];
+  const checkedHabits = user.getCheckedHabits() || [];
+
+  console.log(habitsForToday.length, checkedHabits.length);
+
+  const stats = await user.getStats(req, next);
+  if (stats.length > 0) {
+    await stats[0].updateStat({
+      habitsForTodayLength: habitsForToday.length,
+      checkedHabitsForTodayLength: checkedHabits.length,
+    });
+  }
 
   res.status(200).json({
     status: "success",

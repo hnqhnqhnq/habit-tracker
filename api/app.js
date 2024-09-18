@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const globalErrorHandler = require("./controllers/errorController");
 const AppError = require("./utils/appError");
 const userRouter = require("./routes/userRoutes");
+const statRouter = require("./routes/statRoutes");
 
 // Create express app
 const app = express();
@@ -20,7 +21,7 @@ const corsOptions = {
     "http://192.168.100.4:8081",
     "http://192.168.100.67:8081",
     "http://localhost:8081",
-    "http://192.168.100.193:8081", 
+    "http://192.168.100.193:8081",
   ],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true,
@@ -60,6 +61,7 @@ app.use(xss());
 
 // Routes
 app.use(`${process.env.API_ROUTE}/users`, userRouter);
+app.use(`${process.env.API_ROUTE}/stats`, statRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`The endpoint ${req.originalUrl} does not exist!`, 404));
 });

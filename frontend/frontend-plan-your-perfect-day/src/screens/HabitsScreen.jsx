@@ -5,7 +5,7 @@ import WeekDaysFlatList from '../components/WeekDaysFlatList'
 import HabitList from '../components/HabitList';
 import { useEffect } from 'react';
 
-const HabitsScreen = () => {
+const HabitsScreen = ({ navigation }) => {
 
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
@@ -52,7 +52,7 @@ const HabitsScreen = () => {
 
             <WeekDaysFlatList days={days} setSelectedDays={setDays} daysOfWeek={daysOfWeek} />
 
-            <HabitList checkable={false} urlHabits={urlHabits} userId={userId} days={days}/>
+            <HabitList checkable={false} urlHabits={urlHabits} userId={userId} days={days} navigation={navigation}/>
         </View>
     )
 }

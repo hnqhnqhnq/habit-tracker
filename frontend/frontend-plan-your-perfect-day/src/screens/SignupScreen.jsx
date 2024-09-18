@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { err } from "react-native-svg";
 
-export default function SignupScreen() {
+export default function SignupScreen({ navigation }) {
 
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
@@ -29,10 +30,10 @@ export default function SignupScreen() {
                 })
             });
             if (response.ok) {
-                const data = await response.JSON();
+                navigation.navigate('Login');
             }
-        } catch {
-            console.log("error");
+        } catch(error) {
+            console.log(error);
         }
     }
 

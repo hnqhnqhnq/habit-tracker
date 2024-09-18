@@ -2,8 +2,20 @@ import { View, Text } from "react-native";
 import { StyleSheet } from "react-native";
 import MyButton from "../components/MyButton"
 import SvgComponent from "../assets/SvgComponent"
+import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { AuthContext } from '../../App';
 
-export default function StartScreen({ navigation }) {
+export default function StartScreen() {
+
+    const { setIsLoggedIn } = useContext(AuthContext);
+
+    const navigation = useNavigation();
+
+
+    const handleContinue = () => {
+        setIsLoggedIn(true);
+    };
 
     return (
         <View style={styles.container}>
@@ -13,7 +25,7 @@ export default function StartScreen({ navigation }) {
                 <Text style={styles.textSubtitle}>Track your progress and keep going</Text>
             </View>
             <View style={styles.buttonContainer}>
-                <MyButton text="Get Started!" onPress={() => {navigation.navigate('App')}}/>
+                <MyButton text="Get Started!" onPress={handleContinue}/>
             </View>
         </View>
     );

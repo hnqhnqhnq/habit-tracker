@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     title: {
         color: "#E9DCC9",
         fontSize: 30,
-        marginTop: 32,
+        marginTop: 10,
         marginBottom: 30,
     },
     habitTitle: {
@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10, 
         gap: 20, 
         marginBottom: 30, 
+        marginLeft: 15
     },
 
     selectedColorCircle: {

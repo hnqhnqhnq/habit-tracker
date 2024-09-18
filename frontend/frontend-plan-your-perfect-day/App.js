@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { createContext, useEffect, useState, useContext} from "react";
 import { StyleSheet, ActivityIndicator, View } from "react-native";
 import { Text } from 'react-native';
 // for navigation purposes 
@@ -16,6 +16,8 @@ import AppScreen from "./src/screens/AppScreen";
 import HabitsScreen from "./src/screens/HabitsScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import NewHabitScreen from "./src/screens/NewHabitScreen";
+import EditHabitScreen from "./src/screens/EditHabitScreen";
+import HabitList from "./src/components/HabitList";
 
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -23,6 +25,18 @@ import Feather from 'react-native-vector-icons/Feather'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const habitsStack = createStackNavigator();
+
+function HabitsStack() {
+  return (
+    <habitsStack.Navigator initialRouteName="Habits" screenOptions={{headerShown: false}}> 
+      <habitsStack.Screen name="Habits" component={HabitsScreen} />
+      <habitsStack.Screen name="EditHabits" component={EditHabitScreen} />
+      <habitsStack.Screen name="HabitList" component={HabitList} />
+    </habitsStack.Navigator>
+  );
+}
 
 function AuthStack() {
   return (
@@ -50,7 +64,7 @@ function AppTabs() {
       }}
     >
       <Tab.Screen 
-        name="Today" 
+        name="Today" x
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -74,8 +88,8 @@ function AppTabs() {
         }}
       />
       <Tab.Screen 
-        name="Habits" 
-        component={HabitsScreen}
+        name="HabitsScreen" 
+        component={HabitsStack}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Feather name="book" color={color} size={25} />
@@ -122,16 +136,17 @@ export default function App() {
     );
   }
 
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false}}>
-        {isLoggedIn ? (
-          <Stack.Screen name="App" component={AppTabs} />
-        ) : (
-          <Stack.Screen name="Auth" component={AuthStack} />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {isLoggedIn ? (
+            <Stack.Screen name="App" component={AppTabs} />
+          ) : (
+            <Stack.Screen name="Auth" component={AuthStack} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 }
 

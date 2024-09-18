@@ -12,15 +12,11 @@ export default function HomeScreen({ navigation }) {
   const IP = process.env.EXPO_PUBLIC_IP;
 
   const [userId, setUserId] = useState("");
-  const [urlHabits, setUrlHabits] = useState("");
-    const [userId, setUserId] = useState("");
 
-    const [days, setDays] = useState([]);
+  const [days, setDays] = useState([]);
 
   const urlProfile = `${IP}:${PORT}${API_ROUTE}/users/myProfile`;
-  // const urlHabits = `${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`;
-    const urlProfile = `${IP}:${PORT}${API_ROUTE}/users/myProfile`;
-    const urlHabits = `${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`;
+  const urlHabits = `${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`;
 
   useEffect(() => {
     async function fetchUserData() {
@@ -29,9 +25,6 @@ export default function HomeScreen({ navigation }) {
         if (response.ok) {
           const data = await response.json();
           setUserId(data.data.user._id);
-          setUrlHabits(
-            `${IP}:${PORT}${API_ROUTE}/users/${userId}/todaysHabits`
-          );
         }
       } catch (error) {
         console.log(error);
@@ -39,21 +32,6 @@ export default function HomeScreen({ navigation }) {
     }
     fetchUserData();
   }, []);
-    useEffect(() => {
-        async function fetchUserData() {
-            try {
-                const response = await fetch(`${urlProfile}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserId(data.data.user._id);
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchUserData();
-    }, []);
 
   async function handleSignOut() {
     try {
@@ -70,15 +48,15 @@ export default function HomeScreen({ navigation }) {
       <Header headerTitle=' Current Habits ' />
 
       <View style={styles.content}>
-        <HabitList checkable={true} urlHabits={urlHabits} userId={userId} />
+        <HabitList
+          checkable={true}
+          urlHabits={urlHabits}
+          userId={userId}
+          days={days}
+        />
       </View>
     </View>
   );
-            <View style={styles.content}>
-                <HabitList checkable={true} urlHabits={urlHabits} userId={userId} days={days}/>
-            </View>
-        </View>
-    );
 }
 
 const styles = StyleSheet.create({

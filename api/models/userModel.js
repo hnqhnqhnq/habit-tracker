@@ -183,25 +183,28 @@ userSchema.methods.updateDailyStreak = async function (increment = true) {
     ? moment(this.lastStreakUpdate).startOf("day")
     : null;
 
+  console.log(today, lastStreakDate);
+
   if (lastStreakDate) {
     const daysDifference = today.diff(lastStreakDate, "days");
-
+    console.log(daysDifference);
     if (daysDifference === 0) {
       return;
     } else if (daysDifference === 1) {
       if (increment) {
         this.dailyStreak += 1;
+        this.lastStreakUpdate = today.toDate();
       }
     } else {
-      this.dailyStreak = 0;
+      this.dailyStreak = 1;
+      this.lastStreakUpdate = today.toDate();
     }
   } else {
     if (increment) {
       this.dailyStreak = 1;
+      this.lastStreakUpdate = today.toDate();
     }
   }
-
-  this.lastStreakUpdate = today.toDate();
 
   await this.save();
 };

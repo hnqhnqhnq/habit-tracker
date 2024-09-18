@@ -5,7 +5,7 @@ const { Habit } = require("./../models/habitModel");
 
 exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
   const currentUser = req.user;
-  currentUser.updateDailyStreak(false);
+  await currentUser.updateDailyStreak(false);
 
   res.status(200).json({
     status: "success",
@@ -118,7 +118,7 @@ exports.updateHabit = catchAsync(async (req, res, next) => {
   if (req.body.checked !== undefined) {
     habit.checked = req.body.checked;
     habit.lastChecked = Date.now();
-    user.updateDailyStreak();
+    await user.updateDailyStreak();
   }
 
   await habit.save();

@@ -83,7 +83,7 @@ export default function NewHabitScreen({ navigation }) {
             if (response.ok)
                 console.log("OK!");
 
-            navigation.navigate('Habits');
+            navigation.navigate('HabitsScreen');
             
         } catch(error) {
             console.log(error);

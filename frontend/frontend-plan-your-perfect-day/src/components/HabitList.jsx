@@ -83,10 +83,9 @@ const HabitList = ({ checkable = false, urlHabits = '', userId = '', days = [], 
             });
 
             if (response.ok) {
-                // Now update the habitsHashMap state to set the value of this habitId to true
                 setHabitsHashMap(prevState => ({
                     ...prevState,
-                    [habitId]: !habitsHashMap[habitId]  // Set the habitId to true
+                    [habitId]: !habitsHashMap[habitId] 
                 }));
             }
 

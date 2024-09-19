@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import HabitList from "../components/HabitList";
 import { useState } from "react";
 import { useEffect } from "react";
+import { err } from "react-native-svg";
 
 export default function HomeScreen({ navigation }) {
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
@@ -45,7 +46,7 @@ export default function HomeScreen({ navigation }) {
     return (
         <View style={styles.container}>
             {/* Header Section */}
-            <Header headerTitle=' Current Habits ' />
+            <Header headerTitle=' Current Habits ' navigation={navigation} />
 
             <View style={styles.content}>
                 <HabitList

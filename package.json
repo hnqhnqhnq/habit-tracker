@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-native-haptic-feedback": "^2.3.2",
+    "react-native-vector-icons": "^10.2.0"
+  }
+}

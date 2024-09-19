@@ -48,7 +48,7 @@ const HabitsScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Header headerTitle='All Habits' />
+            <Header headerTitle='All Habits' navigation={navigation}/>
 
             <WeekDaysFlatList days={days} setSelectedDays={setDays} daysOfWeek={daysOfWeek} />
 

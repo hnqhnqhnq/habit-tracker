@@ -18,6 +18,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import NewHabitScreen from "./src/screens/NewHabitScreen";
 import EditHabitScreen from "./src/screens/EditHabitScreen";
 import HabitList from "./src/components/HabitList";
+import StatsScreen from "./src/screens/StatsScreen";
 
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -27,6 +28,16 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const habitsStack = createStackNavigator();
+const homeStack = createStackNavigator();
+
+function HomeStack() {
+  return (
+    <homeStack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
+      <homeStack.Screen name="Home" component={HomeScreen}/>
+      <homeStack.Screen name="Stats" component={StatsScreen}/>
+    </homeStack.Navigator>
+  );
+}
 
 function HabitsStack() {
   return (
@@ -34,6 +45,7 @@ function HabitsStack() {
       <habitsStack.Screen name="Habits" component={HabitsScreen} />
       <habitsStack.Screen name="EditHabits" component={EditHabitScreen} />
       <habitsStack.Screen name="HabitList" component={HabitList} />
+      <habitsStack.Screen name="Stats" component={StatsScreen}/>
     </habitsStack.Navigator>
   );
 }
@@ -64,8 +76,8 @@ function AppTabs() {
       }}
     >
       <Tab.Screen 
-        name="Today" x
-        component={HomeScreen}
+        name="Today" 
+        component={HomeStack}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Foundation name="home" color={color} size={25} />

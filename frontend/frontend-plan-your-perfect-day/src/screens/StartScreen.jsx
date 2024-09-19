@@ -4,7 +4,7 @@ import MyButton from "../components/MyButton"
 import SvgComponent from "../assets/SvgComponent"
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
-import { AuthContext } from '../../App';
+// import { AuthContext } from '../../App';
 
 export default function StartScreen() {
 

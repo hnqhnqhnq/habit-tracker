@@ -166,7 +166,6 @@ function MainApp() {
   );
 }
 
-// Wrapping MainApp inside AuthProvider
 export default function App() {
   return (
     <AuthProvider>

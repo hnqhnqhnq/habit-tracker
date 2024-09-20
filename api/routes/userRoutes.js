@@ -11,7 +11,7 @@ router.route("/signout").get(authController.protect, authController.signout);
 router
   .route("/isLoggedIn")
   .get(authController.protect, authController.isLoggedIn);
-
+router.route("/forgotPassword").post(authController.forgotPassword);
 // Routes for data about users
 router
   .route("/myProfile")
@@ -22,6 +22,8 @@ router
   .route("/:id/habits")
   .get(authController.protect, userController.getUserHabits)
   .post(authController.protect, userController.createHabit);
+
+router.route("/:token/resetPassword").post(authController.resetPassword);
 
 router
   .route("/:userId/habits/:habitId")

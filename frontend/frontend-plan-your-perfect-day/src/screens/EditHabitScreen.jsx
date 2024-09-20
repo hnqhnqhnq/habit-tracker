@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center', 
         marginTop: 20,
-        width: "95%",  // Same width as other buttons
+        width: "85%",  // Same width as other buttons
         height: 65
     },
 

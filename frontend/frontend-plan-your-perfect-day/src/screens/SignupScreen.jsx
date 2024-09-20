@@ -14,10 +14,10 @@ export default function SignupScreen({ navigation }) {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
-    const showAlert = () => {
+    const showAlert = (message) => {
         Alert.alert(
             "Incomplete Form",
-            "All fields must be completed",
+            message, 
             [
                 { text: "OK", onPress: () => {}}
             ]
@@ -42,7 +42,8 @@ export default function SignupScreen({ navigation }) {
             if (response.ok) {
                 navigation.navigate('Login');
             } else {
-                showAlert();
+                const data = await response.json();
+                showAlert(data.message);
             }
         } catch(error) {
             console.log(error);

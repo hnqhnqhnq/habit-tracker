@@ -34,6 +34,24 @@ export default function HomeScreen({ navigation }) {
         fetchUserData();
     }, []);
 
+    useEffect(() => {
+        async function createStatForUser() {
+            try {
+                const resp = await fetch(`${IP}:${PORT}${API_ROUTE}/stats/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', }
+                });
+                if(resp.ok) {
+                    console.log("STAT CREATED!")
+                }
+            } catch(error) {
+                console.log(error);
+            }
+        }
+
+        createStatForUser();
+    } , [])
+
     return (
         <View style={styles.container}>
             {/* Header Section */}

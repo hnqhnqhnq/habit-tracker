@@ -16,10 +16,10 @@ export default function LoginScreen({ navigation }) {
 
     let isStartScreen = false;
 
-    const showAlert = () => {
+    const showAlert = (message) => {
         Alert.alert(
-            "Wrong Data",
-            "Wrong email or password, please try again",
+            "Wrong Credentials",
+            message, 
             [
                 { text: "OK", onPress: () => { } }
             ]
@@ -41,15 +41,15 @@ export default function LoginScreen({ navigation }) {
 
             if (response.ok) {
                 const data = await response.json();
-                let isLoggedInForFirstTime = data.data.user.habits.length == 0 ? true : false;
-                console.log(isLoggedInForFirstTime);
+                // let isLoggedInForFirstTime = data.data.user.habits.length == 0 ? true : false;
 
-                if (isLoggedInForFirstTime)
-                    navigation.navigate('Start');
-
+                // if (isLoggedInForFirstTime) {
+                //     navigation.navigate('Start');
+                // }
                 signIn();
             } else {
-                showAlert();
+                const data = await response.json();
+                showAlert(data.message);
             }
 
         } catch (error) {

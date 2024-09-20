@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { err } from "react-native-svg";
+import { Alert } from "react-native";
 
 export default function SignupScreen({ navigation }) {
 
@@ -13,6 +13,16 @@ export default function SignupScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
+
+    const showAlert = () => {
+        Alert.alert(
+            "Incomplete Form",
+            "All fields must be completed",
+            [
+                { text: "OK", onPress: () => {}}
+            ]
+        );
+    };
 
     async function handleSignUp() {
         try {
@@ -31,6 +41,8 @@ export default function SignupScreen({ navigation }) {
             });
             if (response.ok) {
                 navigation.navigate('Login');
+            } else {
+                showAlert();
             }
         } catch(error) {
             console.log(error);

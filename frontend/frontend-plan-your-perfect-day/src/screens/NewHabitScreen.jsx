@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native";
 import WeekDaysFlatList from "../components/WeekDaysFlatList";
+import { Alert } from "react-native";
 
 import MyButton from "../components/MyButton";
 
@@ -57,7 +58,15 @@ export default function NewHabitScreen({ navigation }) {
         getUserId();
     }, []);
 
-    
+    const showAlert = () => {
+        Alert.alert(
+            "Incomplete Form",
+            "All fields must be completed",
+            [
+                { text: "OK", onPress: () => { } }
+            ]
+        );
+    };
 
     async function handleCreateHabitButtonClick(){
         if(!userId) {
@@ -80,10 +89,12 @@ export default function NewHabitScreen({ navigation }) {
                     })
                 }
             );
-            if (response.ok)
-                console.log("OK!");
-
-            navigation.navigate('HabitsScreen');
+            if (response.ok) {
+                navigation.navigate('HabitsScreen');
+            }
+            else {
+                showAlert();
+            }
             
         } catch(error) {
             console.log(error);

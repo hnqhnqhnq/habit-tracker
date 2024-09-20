@@ -2,6 +2,7 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const { Habit } = require("./../models/habitModel");
+const statController = require("./statController");
 
 exports.getCurrentUserProfile = catchAsync(async (req, res, next) => {
   const currentUser = req.user;
@@ -75,6 +76,11 @@ exports.createHabit = catchAsync(async (req, res, next) => {
   user.habits.push(newHabit);
   await user.save();
   const stats = await user.getStats(req, next);
+
+  if (stats.length === 0) {
+    await statController.createStat(req, res, next);
+    stats = await user.getStats(req, next);
+  }
 
   const habitsForToday = user.getHabitsForToday() || [];
   const checkedHabits = user.getCheckedHabits() || [];

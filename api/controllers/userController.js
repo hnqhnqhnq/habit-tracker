@@ -173,6 +173,19 @@ exports.deleteHabit = catchAsync(async (req, res, next) => {
 
   await Habit.deleteOne({ _id: req.params.habitId });
 
+  const habitsForToday = user.getHabitsForToday() || [];
+  const checkedHabits = user.getCheckedHabits() || [];
+
+  console.log(habitsForToday.length, checkedHabits.length);
+
+  const stats = await user.getStats(req, next);
+  if (stats.length > 0) {
+    await stats[0].updateStat({
+      habitsForTodayLength: habitsForToday.length,
+      checkedHabitsForTodayLength: checkedHabits.length,
+    });
+  }
+
   res.status(204).json({
     status: "success",
   });

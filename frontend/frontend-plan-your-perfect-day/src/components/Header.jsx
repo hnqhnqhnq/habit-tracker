@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react';
 
-const Header = ({ headerTitle = "Default Header", navigation}) => {
+const Header = ({ headerTitle = "Default Header", navigation }) => {
 
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
@@ -37,7 +37,7 @@ const Header = ({ headerTitle = "Default Header", navigation}) => {
             const [statsResponse, userResponse] = await Promise.all([
                 fetch(`${IP}:${PORT}${API_ROUTE}/stats/`),
                 fetch(`${IP}:${PORT}${API_ROUTE}/users/myProfile`)
-            ]);
+                ]);
 
             // Check if both requests succeeded
             if (statsResponse.ok && userResponse.ok) {
@@ -72,7 +72,7 @@ const Header = ({ headerTitle = "Default Header", navigation}) => {
     return (
         <View style={styles.header}>
             <View style={styles.headerLeft}>
-                <Text style={styles.headerTitle}>{ headerTitle }</Text>
+                <Text style={styles.headerTitle}>{headerTitle}</Text>
             </View>
             <TouchableOpacity onPress={handleStatsNavigation} style={styles.statsButton} statsData={statsData}>
                 <Text style={styles.statsButtonText}>My Stats</Text>

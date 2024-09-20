@@ -34,15 +34,6 @@ export default function HomeScreen({ navigation }) {
         fetchUserData();
     }, []);
 
-    async function handleSignOut() {
-        try {
-            const response = await fetch(`${IP}:${PORT}${API_ROUTE}/users/signout`);
-            navigation.navigate("Login");
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     return (
         <View style={styles.container}>
             {/* Header Section */}

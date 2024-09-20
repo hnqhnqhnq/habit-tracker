@@ -2,16 +2,15 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { CircularProgress } from 'react-native-circular-progress';
 
-
 const HabitProgress = ({ progressPercentage, totalHabitsForToday, completedHabitsForToday}) => {
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center', top: 30}}>
             <CircularProgress
-                size={150} // The size of the progress ring
-                width={20} // Width of the ring
-                fill={progressPercentage}  // This represents 60% filled (i.e., 6/10 habits)
-                tintColor='#84d921' // Color of the filled section
-                backgroundColor="grey" // Color of the unfilled section
+                size={150} 
+                width={20}
+                fill={progressPercentage}  
+                tintColor='#84d921' 
+                backgroundColor="grey" 
             />
             <Text style={{
                 color: '#E9DCC9', 
@@ -25,7 +24,7 @@ const HabitProgress = ({ progressPercentage, totalHabitsForToday, completedHabit
                 color: '#E9DCC9',
                 fontSize: 20, 
                 top: 10, 
-            }}>Habits marked as complete</Text>
+            }}>Habits completed for today</Text>
         </View>
     );
 };

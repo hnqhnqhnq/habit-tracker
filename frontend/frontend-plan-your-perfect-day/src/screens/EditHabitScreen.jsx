@@ -8,7 +8,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
-import { FlatList } from "react-native-gesture-handler";
+import { Alert } from "react-native";
 import { TouchableOpacity } from "react-native";
 import WeekDaysFlatList from "../components/WeekDaysFlatList";
 
@@ -48,6 +48,15 @@ export default function EditHabitScreen({ route, navigation }) {
         console.log(habitId);
     }, [])
 
+    const showAlert = () => {
+        Alert.alert(
+            "Incomplete Form",
+            "All fields must be completed",
+            [
+                { text: "OK", onPress: () => { } }
+            ]
+        );
+    };
 
     const [userId, setUserId] = useState("");
 
@@ -57,8 +66,7 @@ export default function EditHabitScreen({ route, navigation }) {
             if (response.ok) {
                 const data = await response.json();
                 setUserId(data.data.user._id);
-            }
-
+            } 
         } catch (error) {
             console.log(error);
         }
@@ -90,10 +98,24 @@ export default function EditHabitScreen({ route, navigation }) {
 
             if (response.ok) {
                 navigation.navigate('Habits');
+            } else {
+                showAlert();
             }
 
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async function handleDeleteHabit() {
+        const response = await fetch(`${IP}:${PORT}${API_ROUTE}/users/${userId}/habits/${habitId}`, 
+            {
+                method: 'DELETE' 
+            }
+        );
+
+        if (response.ok) {
+            navigation.navigate('Habits');
         }
     }
 
@@ -157,7 +179,11 @@ export default function EditHabitScreen({ route, navigation }) {
                     ))}
                 </View>
 
-                <MyButton text='Edit This Habit' onPress={handlePatchRequest}></MyButton>
+                    <MyButton text='Edit This Habit' onPress={handlePatchRequest}></MyButton>
+                    <TouchableOpacity onPress={handleDeleteHabit} style={styles.deleteHabitButton}>
+                        <Text style={styles.deleteHabitButtonText}>Delete Habit</Text>
+                    </TouchableOpacity>
+
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -170,13 +196,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 10,
         justifyContent: "flex-start",
-        gap: 10,
+        gap: 5,
     },
     title: {
         color: "#E9DCC9",
         fontSize: 30,
-        marginTop: 10,
-        marginBottom: 30,
+        // marginBottom: 30,
     },
     habitTitle: {
         backgroundColor: "black",
@@ -187,7 +212,7 @@ const styles = StyleSheet.create({
         borderColor: "#E9DCC9",
         borderWidth: 1,
         color: "#E9DCC9",
-        marginBottom: 15,
+        marginBottom: 10,
     },
     habitDescription: {
         backgroundColor: "black",
@@ -224,5 +249,24 @@ const styles = StyleSheet.create({
     selectedColorCircle: {
         borderWidth: 2,
         borderColor: "blue",
+    },
+
+    deleteHabitButton: {
+        borderColor: 'red',
+        borderWidth: 1,
+        borderRadius: 15,
+        paddingVertical: 12,
+        paddingHorizontal: 50,
+        backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center', 
+        marginTop: 20,
+        width: "95%",  // Same width as other buttons
+        height: 65
+    },
+
+    deleteHabitButtonText: {
+        color: 'red',
+        fontSize: 18,
     },
 });

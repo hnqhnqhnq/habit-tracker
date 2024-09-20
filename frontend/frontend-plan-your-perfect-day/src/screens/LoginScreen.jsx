@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextInput, View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { useAuth } from "../AuthContext";
+import { Alert } from "react-native";
 
 
 export default function LoginScreen({ navigation }) {
+    const { signIn } = useAuth(); 
+
     const API_ROUTE = process.env.EXPO_PUBLIC_API_ROUTE;
     const PORT = process.env.EXPO_PUBLIC_API_PORT;
     const IP = process.env.EXPO_PUBLIC_IP;
@@ -11,6 +15,16 @@ export default function LoginScreen({ navigation }) {
     const [password, setPassword] = useState('');
 
     let isStartScreen = false;
+
+    const showAlert = () => {
+        Alert.alert(
+            "Wrong Data",
+            "Wrong email or password, please try again",
+            [
+                { text: "OK", onPress: () => { } }
+            ]
+        );
+    };
 
     async function handleLogin() {
         try {
@@ -32,8 +46,10 @@ export default function LoginScreen({ navigation }) {
 
                 if (isLoggedInForFirstTime)
                     navigation.navigate('Start');
-                else navigation.navigate('Home');
 
+                signIn();
+            } else {
+                showAlert();
             }
 
         } catch (error) {

@@ -15,6 +15,8 @@ const statRouter = require("./routes/statRoutes");
 // Create express app
 const app = express();
 
+app.set("trust proxy", true);
+
 // CORS settings
 const corsOptions = {
   origin: [
